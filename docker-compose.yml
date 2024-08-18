@@ -1,23 +1,23 @@
 version: '3.8'
+
 services:
   postgres:
     image: postgres:latest
     volumes:
-      -postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     networks:
-      mynetwork
-
+      - mynetwork  
 
   #backend:
   #frontend:
 
 networks:
-  mynetworks:
+  mynetwork:  
+    driver: bridge  # Adicionei um driver, embora o bridge seja padrão, é bom especificar
 
 volumes:
   postgres_data:
-
