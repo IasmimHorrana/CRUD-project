@@ -4,20 +4,32 @@ services:
   postgres:
     image: postgres:latest
     volumes:
-      - postgres_data:/var/lib/postgresql/data  
+      - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: mydatabase
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     networks:
-      - mynetwork  
+      - mynetwork
 
-  #backend:
-  #frontend:
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres/mydatabase
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - mynetwork
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload  # Adicione o comando para iniciar o servidor
 
 networks:
-  mynetwork:  
-    driver: bridge  # Adicionei um driver, embora o bridge seja padrão, é bom especificar
+  mynetwork:
+    driver: bridge
 
 volumes:
   postgres_data:
